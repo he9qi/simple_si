@@ -7,15 +7,21 @@ module SimpleSI
   end
 
   def build(args)
-    @message = args[:message] || "No message"
-    @title = args[:title] || nil
-    @delegate = args[:delegate] || self
+    @message    = args[:message] || "No message"
+    @title      = args[:title] || nil
+    @delegate   = args[:delegate] || self
+    @styleClass = args[:style_class] || nil
+    @styleId    = args[:style_id] || nil
 
     @transition = transitionBuild args[:transition]
     @buttons = buttonsBuild args[:buttons]
 
     alert = SIAlertView.alloc.initWithTitle(@title, andMessage:@message)
     alert.transitionStyle = @transition
+    if alert.respond_to?("styleId") && alert.respond_to?("styleClass")
+      alert.styleId    = @styleId
+      alert.styleClass = @styleClass
+    end
 
     @buttons.each do |b|
       alert.addButtonWithTitle(
